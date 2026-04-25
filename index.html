@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="anekagalery_32x32.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<title>Aneka Galery</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    overflow-x: hidden;
+}
+#navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid white;
+  background-color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.menu a {
+  text-decoration: none;
+  color: black;
+  text-align: left;
+  font-size: 15px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+a {
+  text-decoration-line: none;
+  color: black;
+  border: 10px;
+}
+
+.menu a:hover {
+  color: white;
+  background-color: skyblue;
+  animation: pulseBlue 0.3s ease;
+  text-decoration: underline;
+}
+
+.menu a.active {
+  color: white;
+  background-color: #1f8a8a;
+  font-weight: bold;
+  text-decoration: underline
+}
+
+/* ===== HAMBURGER MOBILE ===== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 10001;
+}
+.hamburger span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background: #111;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+.hamburger.open span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-radius: 0 0 12px 12px;
+    padding: 12px 0;
+    z-index: 10000;
+  }
+
+  .menu.open {
+    display: flex;
+  }
+
+  .menu a {
+    padding: 10px 20px;
+    border-radius: 0;
+    font-size: 15px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .menu a:last-child {
+    border-bottom: none;
+  }
+
+  /* Responsive typography */
+  #logo { height: 40px; }
+  .slider { height: 250px; }
+  .content { left: 20px; }
+  .title { font-size: 20px; }
+  .badge { font-size: 12px; padding: 2px 12px; }
+  .btn { 
+    font-size: 12px; 
+    padding: 8px 14px;
+    right: 20px;
+    bottom: 20px;
+  }
+  
+  /* Category section */
+  #category { 
+    padding: 40px 15px; 
+}
+  .category-header .badge { font-size: 14px; }
+  .carousel-wrapper { height: 280px; }
+  .card { width: 240px; padding: 24px 18px; }
+  .card .card-icon { font-size: 28px; }
+  .card .card-title { font-size: 15px; }
+  .card .card-desc { font-size: 12px; }
+  .card.pos-left { transform: translateX(-200px) scale(0.75) translateZ(-80px); }
+  .card.pos-right { transform: translateX(200px) scale(0.75) translateZ(-80px); }
+  
+  /* Features section */
+  .features { 
+    padding: 40px 15px;
+    gap: 20px;
+  }
+  .feature-box { 
+    width: 100%; 
+    max-width: 100%;
+    padding: 28px 20px;
+  }
+  .feature-box i { font-size: 32px; }
+  .feature-box h3 { font-size: 16px; }
+  .feature-box p { font-size: 13px; }
+  
+
+  footer { padding: 40px 20px 15px; }
+  .footer-top { 
+    flex-direction: column;
+    gap: 25px;
+  }
+  .footer-col { width: 100%; }
+  .footer-col h4 { font-size: 16px; }
+  .footer-col p { 
+    font-size: 12px;
+    max-width: 100%;
+  }
+  .footer-bottom { 
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  .footer-logo { height: 45px; }
+  .wa-float { bottom: 20px; right: 20px; }
+  .wa-float .wa-icon { width: 50px; height: 50px; }
+  .wa-float .wa-icon i { font-size: 26px; }
+  .wa-float .wa-pulse { width: 50px; height: 50px; }
+}
+
+@keyframes pulseBlue {
+  0%   { transform: scale(1); background-color: transparent; }
+  40%  { transform: scale(0.92); background-color: #87ceeb; }
+  100% { transform: scale(1); background-color: skyblue; }
+}
+.slider {
+    position: relative;
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+}
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+.slide.active {
+    opacity: 1;
+}
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(9px);
+    transform: scale(1.1);
+}
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+}
+.content {
+    position: absolute;
+    top: 50%;
+    left: 60px;
+    transform: translateY(-50%);
+    color: white;
+}
+.badge {
+    background: #1f8a8a7e;
+    padding: 8px 16px;
+    border-radius: 15px;
+    display: inline-block;
+    margin-bottom: 12px;
+    box-shadow: inset 0 0 0 1px black;
+}
+
+.title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* BUTTON KANAN BAWAH */
+.btn {
+    position: absolute;
+    right: 60px;
+    bottom: 40px;
+    background: #0c6b6b98;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+    box-shadow: inset 0 0 0 1px black;
+}
+
+.btn:hover {
+    background: #0a5a5a;
+    animation: btnHover 0.35s ease;
+}
+
+@keyframes btnHover {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+
+.btn:active {
+    animation: btnPress 0.3s ease;
+    transform: scale(0.95);
+}
+
+@keyframes btnPress {
+    0%   { transform: scale(1); background: #0c6b6b8a; }
+    40%  { transform: scale(0.92); background: #0a5a5a; }
+    100% { transform: scale(0.95); background: #0a5a5a; }
+}
+
+/* ===== CATEGORY CAROUSEL ===== */
+#category {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.category-header {
+    margin-bottom: 50px;
+}
+
+.category-header .badge {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: #1f8a8a;
+    padding: 8px 20px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+    overflow: hidden;
+}
+
+.card {
+    position: absolute;
+    width: 280px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px 24px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.card.pos-center {
+    transform: translateX(0) scale(1) translateZ(0);
+    z-index: 10;
+    opacity: 1;
+}
+
+.card.pos-left {
+    transform: translateX(-260px) scale(0.82) translateZ(-80px);
+    z-index: 5;
+    opacity: 0.6;
+    filter: brightness(0.7);
+}
+
+.card.pos-right {
+    transform: translateX(260px) scale(0.82) translateZ(-80px);
+    z-index: 5;
+    opacity: 0.6;
+    filter: brightness(0.7);
+}
+
+.card .card-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+.card .card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 12px;
+}
+
+.card .card-desc {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.7;
+    transition: opacity 0.4s ease, max-height 0.4s ease;
+    overflow: hidden;
+}
+
+.card.pos-left .card-desc,
+.card.pos-right .card-desc {
+    opacity: 0;
+    max-height: 0;
+}
+
+.card.pos-center .card-desc {
+    opacity: 1;
+    max-height: 200px;
+}
+
+#logo {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+.features {
+    padding: 60px 40px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.feature-box {
+    background: #1f8a8a;
+    border: 1px solid #1f8a8a;
+    border-radius: 16px;
+    padding: 36px 28px;
+    width: 240px;
+    text-align: center;
+    color: white;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+    animation: fadeInUp 0.6s ease both;
+}
+
+.feature-box:nth-child(1) { animation-delay: 0.1s; }
+.feature-box:nth-child(2) { animation-delay: 0.25s; }
+.feature-box:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes fadeInUp {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.feature-box:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 16px 36px rgba(10, 60, 120, 0.5);
+    border-color: #4a90d9;
+    background: #0a2a4a;
+}
+
+.feature-box i {
+    font-size: 40px;
+    color: #4dd9d9;
+    margin-bottom: 16px;
+    display: block;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.feature-box:hover i {
+    color: #7ec8e3;
+    transform: translateY(-4px) scale(1.15);
+}
+
+.feature-box:hover h3 {
+    color: #b8dff0;
+}
+
+.feature-box:hover p {
+    color: #8bbdd4;
+}
+
+.feature-box h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+    transition: color 0.3s ease;
+}
+
+.feature-box p {
+    font-size: 14px;
+    color: #a8d8d8;
+    line-height: 1.6;
+    transition: color 0.3s ease;
+}
+
+footer {
+    background: #1a1a2e;
+    color: #ccc;
+    padding: 50px 60px 20px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #2a2a4a;
+}
+
+.footer-col h4 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+
+.footer-col p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #aaa;
+    max-width: 220px;
+    text-align: justify;
+}
+
+.footer-col .social-icons {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.footer-col .social-icons i {
+    font-size: 26px;
+    color: #aaa;
+    transition: color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.footer-col .social-icons i:hover {
+    color: #1f8a8a;
+    transform: scale(1.2);
+}
+
+.footer-col .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.footer-col .contact-item i {
+    color: #1f8a8a;
+    font-size: 16px;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.footer-bottom p {
+    font-size: 12px;
+    color: #666;
+}
+
+.footer-logo {
+    height: 55px;
+    width: auto;
+}
+
+.wa-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 99999;
+    text-decoration: none;
+}
+
+.wa-float .wa-icon {
+    width: 58px;
+    height: 58px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.5);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.wa-float .wa-icon i {
+    font-size: 30px;
+    color: white;
+}
+
+.wa-float:hover .wa-icon {
+    transform: scale(1.1);
+}
+
+.wa-float .wa-pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: rgba(37, 211, 102, 0.4);
+    animation: waPulse 1.8s ease-out infinite;
+    z-index: 1;
+}
+
+.wa-float .wa-pulse2 {
+    animation-delay: 0.6s;
+}
+
+.wa-float .wa-pulse3 {
+    animation-delay: 1.2s;
+}
+
+@keyframes waPulse {
+    0%   { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
+}
+</style>
+
+</head>
+<body>
+    <section id="navbar">
+      <a href="index.html">
+        <img src="LOGO ANEKA GALERI PRINTING.png" id="logo" />
+      </a>
+      <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+      <nav class="menu" id="navMenu">
+         <a href="index.html">Home</a>
+         <a href="aboutus.html">About</a>
+         <a href="service.html">Service</a>
+         <a href="contact.html">Contact</a>
+      </nav>
+    </section>
+
+<div class="slider">
+
+    <div class="slide active">
+        <img src="WhatsApp Image 2026-04-13 at 15.33.03.jpeg">
+    </div>
+
+    <div class="slide">
+        <img src="WhatsApp Image 2026-04-13 at 15.33.03.jpeg">
+    </div>
+
+    <div class="slide">
+        <img src="WhatsApp Image 2026-04-14 at 09.58.59 (1).jpeg">
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="content">
+        <div class="badge">Our Service</div>
+        <div class="title">Your Trusted Digital Printing Partner</div>
+    </div>
+
+
+    <button class="btn" onclick="window.location.href='service.html'">
+        See more  <i class="fas fa-external-link-alt"></i>
+    </button>
+
+</div>
+
+<div style="width: 60%; margin: 0 auto; height: 2px; background: linear-gradient(to right, transparent, #1f8a8a, transparent);"></div>
+
+<section id="category">
+    <div class="category-header">
+        <div class="badge" style="color:white;">Kategori Layanan</div>
+    </div>
+    <div class="carousel-wrapper">
+        <div class="card pos-center" data-index="0">
+            <div class="card-icon">🖨️</div>
+            <div class="card-title">Printing Cepat & Berkualitas</div>
+            <div class="card-desc">Proses produksi untuk memindahkan teks, gambar, atau desain ke media kertas menggunakan tinta dan mesin cetak berkualitas tinggi.</div>
+        </div>
+        <div class="card pos-right" data-index="1">
+            <div class="card-icon">🎨</div>
+            <div class="card-title">Jasa Desain Profesional</div>
+            <div class="card-desc">Perencanaan dan perancangan elemen visual untuk menciptakan desain yang memenuhi tujuan fungsional, estetika, dan pengalaman pengguna.</div>
+        </div>
+        <div class="card pos-left" data-index="2">
+            <div class="card-icon">📍</div>
+            <div class="card-title">Aneka Galeri Siap Melayani</div>
+            <div class="card-desc">Proses menggandakan atau menyalin dokumen, gambar, atau teks secara identik dari dokumen asli menggunakan mesin khusus.</div>
+        </div>
+    </div>
+</section>
+
+<div style="width: 60%; margin: 0 auto; height: 2px; background: linear-gradient(to right, transparent, #1f8a8a, transparent);"></div>
+
+    <section class="features">
+      <div class="feature-box">
+        <i class="fa-solid fa-business-time"></i>
+        <h3>Jam Operasional</h3>
+        <p>Dibuka setiap senin-sabtu dalam waktu 08.00-19.00</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-calendar-check"></i>
+        <h3>Best Quality</h3>
+        <p>Kualitas terbaik, hasil maksimal</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-star"></i>
+        <h3>Best Service</h3>
+        <p>Layanan cepat, tepat, dan bergaransi</p>
+      </div>
+    </section>
+    
+<footer>
+    <div class="footer-top">
+        <div class="footer-col">
+            <h4>About Aneka Galery</h4>
+            <p>Aneka galeri dimulai saat pertama kali toko kecil yang dimulai disamping toko yang menjual produk pada tahun 2018 yang ditemukan oleh Vebrio Chang. Pada akhir bulan Desember 2023, Aneka Galeri yang merupakan toko kecil telah pindah menjadi toko utama atau cabang utama dimana sang penemu mulai berfokus untuk menjadi toko service percetakan online.</p>
+        </div>
+
+        <div class="footer-col">
+            <h4>Contact us</h4>
+            <div class="social-icons">
+                <a href="https://wa.me/6282254068851" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/anekagaleriprinting" target="_blank"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p style="margin-bottom:10px; font-size:13px; text-decoration: underline;">Or contact us on</p>
+            <div class="contact-item">
+                <a href="https://wa.me/6282254068851" target="_blank" style="display:flex;align-items:center;gap:10px;color:#aaa;text-decoration:none;">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>+62 822-5406-8851</span>
+                </a>
+            </div>
+            <div class="contact-item">
+                <a href="https://www.instagram.com/anekagaleriprinting" target="_blank" style="display:flex;align-items:center;gap:10px;color:#aaa;text-decoration:none;">
+                    <i class="fab fa-instagram"></i>
+                    <span>@anekagaleriprinting</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Project</h4>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>2026 Digital printing</p>
+        <img src="LOGO ANEKA GALERI PRINTING.png" alt="Logo" class="footer-logo" />
+    </div>
+</footer>
+
+<script>
+
+// Slider hero
+let slides = document.querySelectorAll('.slide');
+let slideIndex = 0;
+
+function showSlide() {
+    slides.forEach(slide => slide.classList.remove('active'));
+    slides[slideIndex].classList.add('active');
+    slideIndex = (slideIndex + 1) % slides.length;
+}
+setInterval(showSlide, 3000);
+
+
+const cards = document.querySelectorAll('.card');
+const positions = ['pos-center', 'pos-right', 'pos-left'];
+let currentCenter = 0;
+
+function updateCarousel() {
+    cards.forEach((card, i) => {
+        card.classList.remove('pos-center', 'pos-left', 'pos-right');
+        const posIndex = (i - currentCenter + cards.length) % cards.length;
+        card.classList.add(positions[posIndex]);
+    });
+}
+
+function goToCard(index) {
+    currentCenter = index;
+    updateCarousel();
+}
+
+function nextCard() {
+    currentCenter = (currentCenter + 1) % cards.length;
+    updateCarousel();
+}
+
+setInterval(nextCard, 3000);
+</script>
+
+<script>
+// Active nav highlight
+const navLinks = document.querySelectorAll('.menu a');
+const currentPage = location.pathname.split('/').pop() || 'index.html';
+navLinks.forEach(link => {
+    const linkPage = link.getAttribute('href');
+    if (linkPage === currentPage || (currentPage === '' && linkPage === 'index.html')) {
+        link.classList.add('active');
+    }
+});
+
+// Hamburger toggle
+function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('navMenu').classList.toggle('open');
+}
+
+// Close menu when link clicked
+document.querySelectorAll('.menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('navMenu').classList.remove('open');
+    });
+});
+</script>
+
+<a href="https://wa.me/6282254068851" target="_blank" class="wa-float">
+    <div class="wa-pulse"></div>
+    <div class="wa-pulse wa-pulse2"></div>
+    <div class="wa-pulse wa-pulse3"></div>
+    <div class="wa-icon">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+</a>
+
+</body>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="shortcut icon" href="anekagalery_32x32.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<title>Service - Aneka Galery</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    background: #f0fafa;
+}
+
+
+#navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid white;
+  background-color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.menu a {
+  text-decoration: none;
+  color: black;
+  text-align: left;
+  font-size: 15px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+a {
+  text-decoration-line: none;
+  color: black;
+  border: 10px;
+}
+
+.menu a:hover {
+  color: white;
+  background-color: skyblue;
+  animation: pulseBlue 0.3s ease;
+  text-decoration: underline;
+}
+
+.menu a.active {
+  color: white;
+  background-color: #1f8a8a;
+  font-weight: bold;
+  text-decoration: underline
+}
+
+/* ===== HAMBURGER MOBILE ===== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 10001;
+}
+.hamburger span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background: #111;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+@media (max-width: 768px) {
+  .hamburger { display: flex; }
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-radius: 0 0 12px 12px;
+    padding: 12px 0;
+    z-index: 10000;
+  }
+  .menu.open { display: flex; }
+  .menu a { padding: 10px 20px; border-radius: 0; font-size: 15px; border-bottom: 1px solid #f0f0f0; }
+  .menu a:last-child { border-bottom: none; }
+
+  /* Responsive typography */
+  #logo { height: 40px; }
+  .service-hero-wrapper { height: 220px; }
+  .service-hero { padding: 20px 40px; margin-top: 40px; margin-bottom: 20px; }
+  .service-hero h1 { font-size: 24px; }
+  .location-section { padding: 0 15px; }
+  .location-section h2 { font-size: 18px; }
+  .location-address { font-size: 13px; padding: 10px 12px; }
+  .map-container iframe { height: 220px; }
+  .see-more-btn a { font-size: 13px; padding: 8px 18px; }
+  .order-section { padding: 0 15px; }
+  .order-section h2 { font-size: 18px; }
+  .order-form-box { padding: 24px 20px; }
+  .order-form-box h3 { font-size: 16px; }
+  .form-group label { font-size: 13px; }
+  .form-group input, .form-group select, .form-group textarea { font-size: 13px; padding: 9px 12px; }
+  .submit-btn { font-size: 14px; padding: 10px; }
+  
+  /* Footer */
+  footer { padding: 40px 20px 15px; }
+  .footer-top { 
+    flex-direction: column;
+    gap: 25px;
+  }
+  .footer-col { width: 100%; }
+  .footer-col h4 { font-size: 16px; }
+  .footer-col p { 
+    font-size: 12px;
+    max-width: 100%;
+  }
+  .footer-bottom { 
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  .footer-logo { height: 45px; }
+  
+  /* WhatsApp button */
+  .wa-float { bottom: 20px; right: 20px; }
+  .wa-float .wa-icon { width: 50px; height: 50px; }
+  .wa-float .wa-icon i { font-size: 26px; }
+  .wa-float .wa-pulse { width: 50px; height: 50px; }
+}
+
+
+@keyframes pulseBlue {
+  0%   { transform: scale(1); background-color: transparent; }
+  40%  { transform: scale(0.92); background-color: #87ceeb; }
+  100% { transform: scale(1); background-color: skyblue; }
+}
+
+#logo {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
+
+.service-hero-wrapper {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-slider {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.service-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.service-slide.active {
+    opacity: 1;
+}
+
+.service-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(9px);
+    transform: scale(1.08);
+}
+
+.service-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    top: 0;
+    left: 0;
+}
+
+.service-hero {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 16px;
+    padding: 28px 97px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    margin-top: 60px;
+    align-self: flex-end;
+    margin-bottom: 72px;
+}
+
+.service-hero h1 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #111;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.service-hero h1::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #1f8a8a;
+    border-radius: 2px;
+}
+
+
+.location-section {
+    max-width: 700px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+}
+
+.location-section h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #111;
+    text-align: center;
+    margin-bottom: 16px;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+}
+
+.location-address {
+    background: #e0f7f7;
+    border: 1px solid #1f8a8a;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(31, 138, 138, 0.2);
+}
+
+.location-address i {
+    color: #e53935;
+    font-size: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.map-container {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #1f8a8a;
+    margin-bottom: 14px;
+    box-shadow: 0 6px 20px rgba(31, 138, 138, 0.25);
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 280px;
+    border: none;
+    display: block;
+}
+
+.see-more-btn {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.see-more-btn a {
+    background: #111;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.see-more-btn a:hover {
+    background: #1f8a8a;
+    transform: translateY(-2px);
+}
+
+/* ===== ORDER SECTION ===== */
+.order-section {
+    max-width: 700px;
+    margin: 0 auto 40px;
+    padding: 0 20px;
+}
+
+.order-section h2 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #1f8a8a;
+    padding-bottom: 8px;
+}
+
+.order-form-box {
+    background: #e0f7f7;
+    border-radius: 16px;
+    padding: 30px 28px;
+    border: 1px solid #1f8a8a;
+    box-shadow: 0 8px 28px rgba(31, 138, 138, 0.2);
+}
+
+.order-form-box h3 {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #111;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #b2ebf2;
+    font-size: 14px;
+    color: #111;
+    outline: none;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    background: #80deea;
+    box-shadow: 0 0 0 2px #1f8a8a;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.upload-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #b2ebf2;
+    border-radius: 8px;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: background 0.3s ease;
+}
+
+.upload-label:hover {
+    background: #80deea;
+}
+
+.upload-label input[type="file"] {
+    display: none;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    background: #1f8a8a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #0a5a5a;
+    transform: translateY(-2px);
+}
+
+.submit-btn:active {
+    transform: scale(0.97);
+}
+
+footer {
+    background: #1a1a2e;
+    color: #ccc;
+    padding: 50px 60px 20px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #2a2a4a;
+}
+
+.footer-col h4 {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 16px;
+}
+
+.footer-col p {
+    font-size: 13px;
+    line-height: 1.8;
+    color: #aaa;
+    max-width: 220px;
+    text-align: justify;
+}
+
+.footer-col .social-icons {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.footer-col .social-icons i {
+    font-size: 26px;
+    color: #aaa;
+    transition: color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.footer-col .social-icons i:hover {
+    color: #1f8a8a;
+    transform: scale(1.2);
+}
+
+.footer-col .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.footer-col .contact-item i {
+    color: #1f8a8a;
+    font-size: 16px;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.footer-bottom p {
+    font-size: 12px;
+    color: #666;
+}
+
+.footer-logo {
+    height: 55px;
+    width: auto;
+}
+
+.wa-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 99999;
+    text-decoration: none;
+}
+.wa-float .wa-icon {
+    width: 58px;
+    height: 58px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.5);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+.wa-float .wa-icon i { font-size: 30px; color: white; }
+.wa-float:hover .wa-icon { transform: scale(1.1); }
+.wa-float .wa-pulse {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: rgba(37,211,102,0.4);
+    animation: waPulse 1.8s ease-out infinite;
+    z-index: 1;
+}
+.wa-float .wa-pulse2 { animation-delay: 0.6s; }
+.wa-float .wa-pulse3 { animation-delay: 1.2s; }
+@keyframes waPulse {
+    0%   { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+    100% { transform: translate(-50%,-50%) scale(2.2); opacity: 0; }
+}
+</style>
+</head>
+<body>
+    <section id="navbar">
+      <a href="index.html">
+        <img src="LOGO ANEKA GALERI PRINTING.png" id="logo" />
+      </a>
+      <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </div>
+      <nav class="menu" id="navMenu">
+         <a href="index.html">Home</a>
+         <a href="aboutus.html">About</a>
+         <a href="service.html">Service</a>
+         <a href="contact.html">Contact</a>
+      </nav>
+    </section>
+
+    
+    <div class="service-hero-wrapper">
+        <div class="service-slider">
+            <div class="service-slide active">
+                <img src="WhatsApp Image 2026-04-13 at 15.33.03.jpeg" alt="slide1">
+            </div>
+            <div class="service-slide">
+                <img src="WhatsApp Image 2026-04-13 at 15.33.04.jpeg" alt="slide2">
+            </div>
+            <div class="service-slide">
+                <img src="WhatsApp Image 2026-04-14 at 09.58.58.jpeg" alt="slide3">
+            </div>
+            <div class="service-overlay"></div>
+        </div>
+        <div class="service-hero">
+            <h1>Service</h1>
+        </div>
+    </div>
+
+   <br/>
+   <br/>
+   <br/>
+    <div class="location-section">
+        <h2>Location</h2>
+        <div class="location-address">
+            <i class="fas fa-map-marker-alt"></i>
+            <span style="text-align: center;">Jl. Komodor Yos Sudarso No.11 A-B, Sungai Belitung, Kec. Pontianak Bar., Kota Pontianak, Kalimantan Barat 78113</span>
+        </div>
+        <div class="map-container">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.818295040523!2d109.30775687636743!3d-0.006452735569276112!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e1d58a17eabf9cf%3A0xf702d191e1509de8!2sAneka%20Galeri%20Digital%20Printing!5e0!3m2!1sid!2sid!4v1776855800663!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+        <div class="see-more-btn">
+            <a href="https://maps.app.goo.gl/2bwvWDF4fZMi2M7X7" target="_blank">
+                See more <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+    <div class="order-section">
+        <h2 style="text-align: center;">Order disini - Dijamin Lebih Cepat dan Mudah</h2>
+        <div class="order-form-box">
+            <h3>Order Now</h3>
+            <form>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" placeholder="Masukkan nama Anda" />
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select>
+                        <option value="">Pilih kategori</option>
+                        <option value="printing">Printing</option>
+                        <option value="desain">Desain</option>
+                        <option value="fotocopy">Fotocopy</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Judul</label>
+                    <input type="text" placeholder="Judul pesanan" />
+                </div>
+                <div class="form-group">
+                    <label>Ukuran</label>
+                    <input type="text" placeholder="Contoh: A4, A3, dll" />
+                </div>
+                <div class="form-group">
+                    <label>Request</label>
+                    <textarea placeholder="Tuliskan hal yang perlu ditambahkan..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Sketsa (Opsional)</label>
+                    <label class="upload-label">
+                        <i class="fas fa-upload"></i> Upload File
+                        <input type="file" accept="image/*,.pdf" />
+                    </label>
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <div style="width: 60%; margin: 0 auto; height: 2px; background: linear-gradient(to right, transparent, #1f8a8a, transparent);"></div>
+
+ 
+    <footer>
+        <div class="footer-top">
+            <div class="footer-col">
+                <h4>About Aneka Galery</h4>
+                <p>Aneka galeri dimulai saat pertama kali toko kecil yang dimulai disamping toko yang menjual produk pada tahun 2018 yang ditemukan oleh Vebrio Chang. Pada akhir bulan Desember 2023, Aneka Galeri telah pindah menjadi toko utama atau cabang utama dimana sang penemu mulai berfokus untuk menjadi toko service percetakan online.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Contact us</h4>
+                <div class="social-icons">
+                    <a href="https://wa.me/6282254068851" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.instagram.com/anekagaleriprinting" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p style="margin-bottom:10px; font-size:12px;">Or contact us on</p>
+                <div class="contact-item">
+                    <a href="https://wa.me/6282254068851" target="_blank" style="display:flex;align-items:center;gap:10px;color:#aaa;text-decoration:none;">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>+62 822-5406-8851</span>
+                    </a>
+                </div>
+                <div class="contact-item">
+                    <a href="https://www.instagram.com/anekagaleriprinting" target="_blank" style="display:flex;align-items:center;gap:10px;color:#aaa;text-decoration:none;">
+                        <i class="fab fa-instagram"></i>
+                        <span>@anekagaleriprinting</span>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Project</h4>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>2026 Digital printing</p>
+            <img src="LOGO ANEKA GALERI PRINTING.png" alt="Logo" class="footer-logo" />
+        </div>
+    </footer>
+
+<script>
+const serviceSlides = document.querySelectorAll('.service-slide');
+let serviceIndex = 0;
+
+function showServiceSlide() {
+    serviceSlides.forEach(s => s.classList.remove('active'));
+    serviceSlides[serviceIndex].classList.add('active');
+    serviceIndex = (serviceIndex + 1) % serviceSlides.length;
+}
+setInterval(showServiceSlide, 3000);
+</script>
+
+<script>
+const navLinks = document.querySelectorAll('.menu a');
+const currentPage = location.pathname.split('/').pop() || 'index.html';
+navLinks.forEach(link => {
+    if (link.getAttribute('href') === currentPage) link.classList.add('active');
+});
+function toggleMenu() {
+    document.getElementById('hamburger').classList.toggle('open');
+    document.getElementById('navMenu').classList.toggle('open');
+}
+document.querySelectorAll('.menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('navMenu').classList.remove('open');
+    });
+});
+</script>
+
+<a href="https://wa.me/6282254068851" target="_blank" class="wa-float">
+    <div class="wa-pulse"></div>
+    <div class="wa-pulse wa-pulse2"></div>
+    <div class="wa-pulse wa-pulse3"></div>
+    <div class="wa-icon">
+        <i class="fab fa-whatsapp"></i>
+    </div>
+</a>
+
+</body>
+</html>
